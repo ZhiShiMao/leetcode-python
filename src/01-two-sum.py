@@ -57,9 +57,3 @@ class Solution_1:
                     continue
                 if nums[i] + nums[j] == target:
                     return [i, j]
-
-
-if __name__ == "__main__":
-    from solution_wrapper import solution_wrapper
-
-    solution_wrapper(Solution)()

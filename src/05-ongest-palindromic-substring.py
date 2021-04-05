@@ -23,8 +23,3 @@ class Solution:
                 ret = s[x + 1 : y]
 
         return ret
-
-
-s = Solution()
-r = s.longestPalindrome("ac")
-print(r)

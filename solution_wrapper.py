@@ -1,8 +1,22 @@
 from types import FunctionType
 from typing import Dict, Optional
 
+from ListNode import ListNode
+
 
 def solution_wrapper(cls):
+    def find_func() -> Optional[FunctionType]:
+        """获取Solution中算法函数
+
+        Returns:
+            Optional[FunctionType]: 返回函数
+        """
+        for key, value in vars(cls).items():
+            if not key.startswith("__"):
+                # print(value.__annotations__)
+                return value
+        return None
+
     def to_cases() -> Dict:
         """获取Solution类__doc__中的测试用例
 
@@ -45,17 +59,6 @@ def solution_wrapper(cls):
                 test_case["results"] = eval(results)
         return test_cases
 
-    def find_func() -> Optional[str]:
-        """获取Solution中算法函数名称
-
-        Returns:
-            Optional[str]: 返回函数名称
-        """
-        for key, value in vars(cls).items():
-            if not key.startswith("__"):
-                return value.__name__
-        return None
-
     def wrapper(*args, **kwargs) -> FunctionType:
         """生成Solution类型的实例化函数
 
@@ -64,9 +67,25 @@ def solution_wrapper(cls):
         """
 
         obj = cls(*args, **kwargs)
-        func_name = find_func()
+        func = find_func()
         for test_case in to_cases():
-            results = eval(f"obj.{func_name}")(**test_case["params"])
+
+            # 如果类型是 ListNode, 参数进行更新操作
+            for key, value in test_case["params"].items():
+                try:
+                    if issubclass(func.__annotations__[key], ListNode):
+                        test_case["params"][key] = ListNode.from_list(value)
+                except:
+                    pass
+            results = eval(f"obj.{func.__name__}")(**test_case["params"])
+
+            # 如果类型是 ListNode, 结果进行更新操作
+            try:
+                if issubclass(func.__annotations__["return"], ListNode):
+                    results = ListNode.to_list(results)
+            except:
+                pass
+
             except_results = test_case["results"]
             print(results, except_results)
         return obj
