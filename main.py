@@ -1,5 +1,5 @@
 import sys
-from solution_wrapper import solution_wrapper
+from extra.solution_wrapper import solution_wrapper
 
 filename = sys.argv[1]
 if filename:

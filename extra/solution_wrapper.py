@@ -1,7 +1,7 @@
 from types import FunctionType
 from typing import Dict, Optional
 
-from ListNode import ListNode
+from extra.ListNode import ListNode
 
 
 def solution_wrapper(cls):
